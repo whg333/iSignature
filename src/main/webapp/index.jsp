@@ -37,7 +37,7 @@
             var datapair = $sigdiv.jSignature("getData", "image"); //设置输出的格式，具体可以参考官方文档
 
             var i = new Image();
-            i.src = "data:" + datapair[0] + "," + datapair[1]
+            i.src = "data:" + datapair[0] + "," + datapair[1];
             $(i).appendTo($("#image")) // append the image (SVG) to DOM.
         }
 
@@ -54,11 +54,12 @@
 
             $.ajax({
                 type: "POST",
-                url: "Default.aspx",
-                data: "image=" + imagebase64,
+                url: "${pageContext.request.contextPath}/uploadSign.sl",
+                data: "sign=" + imagebase64,
                 success: function (msg) {
                     var createImage = new Image();
-                    createImage.src = msg;
+                    // createImage.src = msg;
+                    createImage.src = "data:image/png;base64," + msg;
                     $(createImage).appendTo($("#img_src"))
                 }
             });

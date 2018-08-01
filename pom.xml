@@ -257,5 +257,11 @@
 			<artifactId>dom4j</artifactId>
 			<version>1.6.1</version>
 		</dependency>
+		
+		<dependency>
+            <groupId>com.skylinematrix</groupId>
+            <artifactId>backend-util</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
 	</dependencies>
 </project>

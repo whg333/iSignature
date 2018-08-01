@@ -12,7 +12,7 @@ import org.apache.log4j.PropertyConfigurator;
  */
 public class Log4jProperties {
 	
-	private static final String LOG_LEVEL = "WARN";
+	private static final String LOG_LEVEL = "INFO";
 	
 	public static void init(){
 		Properties pro = new Properties();

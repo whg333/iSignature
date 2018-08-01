@@ -14,10 +14,12 @@
 	        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd"
 	        >
 
+	<!-- 
 	<bean id="jRedis" class="com.skylinematrix.jredis.JRedisFactory" factory-method="createJRedis">
 		<constructor-arg index="0" value="${redis_masters_url}" />
 		<constructor-arg index="1" value="${redis_slaves_url}" />
-	</bean>
+	</bean> 
+	-->
 	
 	<!-- <bean id="globalContext" class="com.skylinematrix.crazyFarm.backend.framework.GlobalContext"/> -->
 
