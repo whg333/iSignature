@@ -1,0 +1,261 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.whg</groupId>
+    <artifactId>iSignature</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>war</packaging>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    	<spring.version>4.3.2.RELEASE</spring.version>
+    </properties>
+    <build>
+    	<finalName>${projectName}</finalName>
+    	
+        <pluginManagement>
+			<plugins>
+				<plugin>
+	                <artifactId>maven-compiler-plugin</artifactId>
+	                <version>3.3</version>
+	                <configuration>
+	                    <source>1.8</source>
+	                    <target>1.8</target>
+	                    <encoding>UTF-8</encoding>
+	                </configuration>
+	            </plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>2.0.1</version>
+					<configuration>
+						<webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
+					</configuration>
+				</plugin>
+				<plugin>
+			        <groupId>org.apache.maven.plugins</groupId>
+			        <artifactId>maven-surefire-plugin</artifactId>
+					<!-- 是否跳过JUnit测试 -->
+			    	<configuration>
+			        	<skip>true</skip>
+			        </configuration>
+			    </plugin>
+			</plugins>
+		</pluginManagement>
+		
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>${dir.name}/**</include>
+					<include>com/**</include>
+					<include>spring/*</include>
+					<include>*</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>applicationContext.xml</include>
+					<include>constant_file.properties</include>
+				</includes>
+			</resource>
+		</resources>
+		
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<includes>
+					<include>applicationContext.xml</include>
+					<include>com/**</include>
+					<include>*</include>
+				</includes>
+			</testResource>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>applicationContext.xml</include>
+				</includes>
+			</testResource>
+		</testResources>
+    </build>
+    
+    <profiles>
+		<!-- by default, local profile will be used, if you want to use other 
+			profiles, please add -Denv=profileId to your mvn command. 
+			eg:mvn -Denv=wanba_ts clean compile package -->
+		<profile>
+			<!-- 请每个开发人员都自己分支local目录，修改*.properties和app.xml为适合自己本机的配置， 不允许再在pom内部定义自己本机的profile，以免影响他人 -->
+			<id>local</id>
+			<activation>
+				<property>
+					<name>env</name>
+					<value>local</value>
+				</property>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<dir.name>local</dir.name>
+				<db.properties>${dir.name}/db.properties</db.properties>
+				<repo.config>${dir.name}/app.xml</repo.config>
+				<jdbc.properties>${dir.name}/jdbc.properties</jdbc.properties>
+				<jdbc.config>${dir.name}/jdbc.xml</jdbc.config>
+				<projectName>iSignature</projectName>
+			</properties>
+		</profile>
+		<profile>
+			<!-- 腾讯有朋友社区和qzone社区两个平台，分别对应platform_pengyou.properties和platform_qzone.properties 
+				服务端部署脚本应当用其中一个文件覆盖platform.properties，才能正常使用。默认是qzone社区。 -->
+			<id>iSignature</id>
+			<activation>
+				<property>
+					<name>env</name>
+					<value>iSignature</value>
+				</property>
+			</activation>
+			<properties>
+				<dir.name>iSignature</dir.name>
+				<db.properties>${dir.name}/db.properties</db.properties>
+				<repo.config>${dir.name}/app.xml</repo.config>
+				<jdbc.properties>${dir.name}/jdbc.properties</jdbc.properties>
+				<jdbc.config>${dir.name}/jdbc.xml</jdbc.config>
+				<projectName>iSignature</projectName>
+			</properties>
+		</profile>
+		<profile>
+			<!-- 外网测试版配置 -->
+			<id>outtestdev</id>
+			<activation>
+				<property>
+					<name>env</name>
+					<value>outtestdev</value>
+				</property>
+			</activation>
+			<properties>
+				<dir.name>outtestdev</dir.name>
+				<db.properties>${dir.name}/db.properties</db.properties>
+				<repo.config>${dir.name}/app.xml</repo.config>
+				<jdbc.properties>${dir.name}/jdbc.properties</jdbc.properties>
+				<jdbc.config>${dir.name}/jdbc.xml</jdbc.config>
+				<projectName>outtestdev</projectName>
+			</properties>
+		</profile>
+	</profiles>
+    
+    <dependencies>
+    	<!-- servlet和jsp -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>2.2</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+		    <groupId>javax.servlet</groupId>
+		    <artifactId>jstl</artifactId>
+		    <version>1.2</version>
+		</dependency>
+		
+		<!-- 跨域CORS支持 -->
+		<dependency>
+		    <groupId>org.apache.tomcat</groupId>
+		    <artifactId>tomcat-catalina</artifactId>
+		    <version>7.0.41</version>
+		    <scope>provided</scope>
+		</dependency>
+		
+		<!-- slf4j and junit -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.2</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+		</dependency>
+		
+		<!-- mysql jdbc driver & jdbc connection pool -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.34</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>c3p0</groupId>
+			<artifactId>c3p0</artifactId>
+			<version>0.9.1.2</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+
+		<!-- springframework -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<!-- spring mvc -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.3.1</version>
+		</dependency>
+
+		<!-- spring test 4 junit -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<!-- mybatis integration spring -->
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+			<version>3.4.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+			<version>1.3.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>1.8.0</version>
+		</dependency>
+		<dependency>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>1.6.1</version>
+		</dependency>
+	</dependencies>
+</project>
